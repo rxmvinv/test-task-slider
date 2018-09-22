@@ -43,6 +43,8 @@ app.use(function(req, res, next) {
 
 app.use(cors());
 app.use(express.static('dist/image-slider-test-task'))
+app.use(express.static('public'))
+app.use('/images', express.static('public/images'))
 app.use('/api', routesApi);
 
 // catch 404 and forward to error handler

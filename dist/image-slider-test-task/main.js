@@ -48,7 +48,9 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 //import { HttpClientModule, HttpHeaders } from '@angular/common/http';
 var httpOptions = {
-    headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({ 'Content-Type': 'application/json' })
+    headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({
+        'Content-Type': 'application/json; charset=utf-8'
+    })
 };
 var ApiInteractionService = /** @class */ (function () {
     function ApiInteractionService(http) {
@@ -56,7 +58,7 @@ var ApiInteractionService = /** @class */ (function () {
         this.apiUrl = 'http://localhost:3000/api/slides';
     }
     ApiInteractionService.prototype.getSlides = function () {
-        return this.http.get(this.apiUrl);
+        return this.http.get(this.apiUrl, httpOptions).pipe();
     };
     ApiInteractionService.prototype.addSlide = function (slide) {
         return this.http.post(this.apiUrl, slide, httpOptions).pipe(
@@ -239,7 +241,7 @@ var AppModule = /** @class */ (function () {
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_6__["FormsModule"],
-                //ReactiveFormsModule,
+                _angular_forms__WEBPACK_IMPORTED_MODULE_6__["ReactiveFormsModule"],
                 _app_routing_module__WEBPACK_IMPORTED_MODULE_7__["AppRoutingModule"],
                 _angular_common_http__WEBPACK_IMPORTED_MODULE_8__["HttpClientModule"]
             ],
@@ -272,7 +274,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n    <h1>New Slide</h1>\n    <form>\n      <div class=\"form-group\">\n        <label for=\"title\">Title:</label>\n        <input type=\"text\" class=\"form-control\" required  (change)=\"onTitleChange($event)\" name=\"title\">\n      </div>\n\n      <div class=\"form-group\">\n        <label for=\"description\">Description:</label>\n        <input type=\"text\" class=\"form-control\" required  (change)=\"onDescriptionChange($event)\" name=\"description\">\n      </div>\n\n      <div class=\"form-group\">\n        <label for=\"image\">Image:</label>\n        <input type=\"file\" class=\"form-control\" (change)=\"onFileChange($event)\" name=\"image\" />\n      </div>\n\n      <div class=\"form-group\">\n        <label for=\"url\">Url:</label>\n        <input type=\"text\" class=\"form-control\" (change)=\"onUrlChange($event)\" name=\"url\">\n      </div>\n\n      <button type=\"submit\" class=\"btn btn-success\">Submit</button>\n\n    </form>\n</div>\n"
+module.exports = "<div class=\"container\">\n    <h1>New Slide</h1>\n    <form [formGroup]=\"insertedSlide\" (ngSubmit)=\"onSubmit(insertedSlide.value)\">\n      <div class=\"form-group\">\n        <label for=\"title\">Title:</label>\n        <input type=\"text\" class=\"form-control\" required  (change)=\"onTitleChange($event)\" name=\"title\">\n      </div>\n\n      <div class=\"form-group\">\n        <label for=\"description\">Description:</label>\n        <input type=\"text\" class=\"form-control\" required  (change)=\"onDescriptionChange($event)\" name=\"description\">\n      </div>\n\n      <div class=\"form-group\">\n        <label for=\"image\">Image:</label>\n        <input type=\"file\" class=\"form-control\" (change)=\"onFileChange($event)\" name=\"image\" />\n      </div>\n\n      <div class=\"form-group\">\n        <label for=\"embedded\">Url:</label>\n        <input type=\"text\" class=\"form-control\" (change)=\"onEmbeddedChange($event)\" name=\"embedded\">\n      </div>\n\n      <button type=\"submit\" class=\"btn btn-success\">Submit</button>\n\n    </form>\n</div>\n"
 
 /***/ }),
 
@@ -287,6 +289,8 @@ module.exports = "<div class=\"container\">\n    <h1>New Slide</h1>\n    <form>\
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NewSlideComponent", function() { return NewSlideComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _api_interaction_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api-interaction.service */ "./src/app/api-interaction.service.ts");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -297,41 +301,54 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+
+
 var NewSlideComponent = /** @class */ (function () {
-    /*
-      formGroup = this.fb.group({
-        file: [null, Validators.required]
-      });
-    */
-    //constructor(private fb: FormBuilder, private cd: ChangeDetectorRef) { }
-    function NewSlideComponent() {
+    function NewSlideComponent(fb, cd, apiService) {
+        this.fb = fb;
+        this.cd = cd;
+        this.apiService = apiService;
     }
     NewSlideComponent.prototype.ngOnInit = function () {
+        this.insertedSlide = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormGroup"]({
+            title: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](),
+            description: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](),
+            image: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"]([null, _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]),
+            embedded: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"]()
+        });
     };
     NewSlideComponent.prototype.onTitleChange = function (event) {
+        this.insertedSlide.value.title = event.target.value;
     };
     NewSlideComponent.prototype.onDescriptionChange = function (event) {
+        this.insertedSlide.value.description = event.target.value;
     };
     NewSlideComponent.prototype.onFileChange = function (event) {
-        /*
-        let reader = new FileReader();
-    
-        if(event.target.files && event.target.files.length) {
-          const [file] = event.target.files;
-          reader.readAsDataURL(file);
-    
-          reader.onload = () => {
-            this.formGroup.patchValue({
-              file: reader.result
-            });
-    
-            // need to run CD since file load runs outside of zone
-            this.cd.markForCheck();
-          };
+        //console.log(event.target.value);
+        var _this = this;
+        var reader = new FileReader();
+        if (event.target.files && event.target.files.length) {
+            var file = event.target.files[0];
+            reader.readAsDataURL(file);
+            reader.onload = function () {
+                _this.insertedSlide.value.image = reader.result;
+                // need to run CD since file load runs outside of zone
+                _this.cd.markForCheck();
+            };
         }
-        */
     };
-    NewSlideComponent.prototype.onUrlChange = function (event) {
+    NewSlideComponent.prototype.onEmbeddedChange = function (event) {
+        this.insertedSlide.value.embedded = event.target.value;
+    };
+    NewSlideComponent.prototype.onSubmit = function (formValue) {
+        if (typeof formValue.image !== 'string') {
+            formValue.image = '/assets/images/default.png';
+        }
+        if (!formValue.embedded) {
+            formValue.embedded = 'empty';
+        }
+        console.log(formValue);
+        this.apiService.addSlide(formValue).subscribe();
     };
     NewSlideComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -339,7 +356,7 @@ var NewSlideComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./new-slide.component.html */ "./src/app/new-slide/new-slide.component.html"),
             styles: [__webpack_require__(/*! ./new-slide.component.css */ "./src/app/new-slide/new-slide.component.css")]
         }),
-        __metadata("design:paramtypes", [])
+        __metadata("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormBuilder"], _angular_core__WEBPACK_IMPORTED_MODULE_0__["ChangeDetectorRef"], _api_interaction_service__WEBPACK_IMPORTED_MODULE_1__["ApiInteractionService"]])
     ], NewSlideComponent);
     return NewSlideComponent;
 }());
@@ -375,7 +392,7 @@ var Slide = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".central {\r\n  background: red;\r\n}\r\n"
+module.exports = ""
 
 /***/ }),
 
@@ -386,7 +403,7 @@ module.exports = ".central {\r\n  background: red;\r\n}\r\n"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<li>\n  <img src=\"{{slide.image}}\" alt=\"image\">\n  <span class=\"badge\">{{slide.id}}</span> {{slide.title}}\n  <div>{{slide.description}}</div>\n  <span>Iframe: {{slide.embedded}}</span>\n  <button type=\"button\" name=\"remove-slide\" (click)=\"onRemove(slide)\">remove</button>\n</li>\n"
+module.exports = "<div>\n  <img src=\"{{slide.image}}\" alt=\"image\" class=\"d-block w-100\">\n  <div class=\"carousel-caption d-none d-md-block\">\n    {{slide.title}}\n    <div>\n      <p>{{slide.description}}</p>\n      <span class=\"badge\">{{slide.id}}</span>\n      <span>Iframe: {{slide.embedded}}</span>\n      <button type=\"button\" name=\"remove-slide\" (click)=\"onRemove(slide)\">remove</button>\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -451,7 +468,7 @@ var SlideComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "ul {\r\n  list-style: none;\r\n}\r\n\r\nli {\r\n  display: inline-block;\r\n  width: 200px;\r\n  height: 200px;\r\n  background: red;\r\n  margin: 5px;\r\n  border-radius: 20%;\r\n}\r\n"
+module.exports = "\r\n"
 
 /***/ }),
 
@@ -462,7 +479,7 @@ module.exports = "ul {\r\n  list-style: none;\r\n}\r\n\r\nli {\r\n  display: inl
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<h2>Slides</h2>\n<div class=\"list-box\">\n  <ul class=\"slides\">\n      <app-slide  *ngFor=\"let slide of slides\" [slide]=\"slide\"></app-slide>\n      <!--<app-slide  *ngFor=\"let slide of slides\" [slide]=\"{ $implicit: slide }\"></app-slide>-->\n  </ul>\n</div>\n\n<a routerLink=\"/new-slide\">Add New</a>\n"
+module.exports = "<h2>Slides</h2>\n<div id=\"carouselExampleControls\" class=\"carousel slide\" data-ride=\"carousel\">\n  <ol class=\"carousel-indicators\">\n    <li *ngFor=\"let slide of slides; let index = index\" data-target=\"#carouselExampleIndicators\" data-slide-to=\"index\" [class.active]=\"index == 0\"></li>\n  </ol>\n  <div  class=\"carousel-inner\">\n      <app-slide  *ngFor=\"let slide of slides; let index = index\" [slide]=\"slide\" class=\"carousel-item\" [class.active]=\"index == 0\"></app-slide>\n      <!--<app-slide  *ngFor=\"let slide of slides\" [slide]=\"{ $implicit: slide }\"></app-slide>-->\n      <a class=\"carousel-control-prev\" href=\"#carouselExampleControls\" role=\"button\" data-slide=\"prev\">\n        <span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"></span>\n        <span class=\"sr-only\">Previous</span>\n      </a>\n      <a class=\"carousel-control-next\" href=\"#carouselExampleControls\" role=\"button\" data-slide=\"next\">\n        <span class=\"carousel-control-next-icon\" aria-hidden=\"true\"></span>\n        <span class=\"sr-only\">Next</span>\n      </a>\n  </div>\n</div>\n\n<a routerLink=\"/new-slide\">Add New</a>\n"
 
 /***/ }),
 
@@ -495,6 +512,7 @@ var SliderComponent = /** @class */ (function () {
     }
     SliderComponent.prototype.ngOnInit = function () {
         this.loadSlides();
+        $('.carousel').carousel({ interval: 5000 });
     };
     SliderComponent.prototype.loadSlides = function () {
         var _this = this;
@@ -577,7 +595,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\work\image-slider-test-task\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! D:\ngbootstrap\image-slider-test-task\src\main.ts */"./src/main.ts");
 
 
 /***/ })
