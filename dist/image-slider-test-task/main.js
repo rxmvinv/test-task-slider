@@ -34,7 +34,8 @@ webpackEmptyAsyncContext.id = "./src/$$_lazy_route_resource lazy recursive";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ApiInteractionService", function() { return ApiInteractionService; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -46,9 +47,10 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 
 
+
 //import { HttpClientModule, HttpHeaders } from '@angular/common/http';
 var httpOptions = {
-    headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({
+    headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({
         'Content-Type': 'application/json; charset=utf-8'
     })
 };
@@ -58,27 +60,22 @@ var ApiInteractionService = /** @class */ (function () {
         this.apiUrl = 'http://localhost:3000/api/slides';
     }
     ApiInteractionService.prototype.getSlides = function () {
-        return this.http.get(this.apiUrl, httpOptions).pipe();
+        return this.http.get(this.apiUrl, httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])(function (data) { return console.log(data); }, function (error) { return console.log(error); }));
     };
     ApiInteractionService.prototype.addSlide = function (slide) {
-        return this.http.post(this.apiUrl, slide, httpOptions).pipe(
-        //console.log(`added slide w/ id=${slide.id}`),
-        //catchError(error => console.log(error))
-        );
+        return this.http.post(this.apiUrl, slide, httpOptions)
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])(function (data) { return console.log(data); }, function (error) { return console.log(error); }));
     };
     ApiInteractionService.prototype.removeSlide = function (slide) {
         var id = typeof slide === 'number' ? slide : slide.id;
         var url = this.apiUrl + "/" + id;
-        return this.http.delete(url, httpOptions).pipe(
-        //console.log(`deleted slide id=${id}`),
-        //catchError(console.error(error))
-        );
+        return this.http.delete(url, httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])(function (data) { return console.log(data); }, function (error) { return console.log(error); }));
     };
     ApiInteractionService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
             providedIn: 'root'
         }),
-        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"]])
+        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
     ], ApiInteractionService);
     return ApiInteractionService;
 }());
@@ -263,7 +260,7 @@ var AppModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = ".keyframe-animated {\r\n  animation: simplefadein 0.4s 1 ease-in-out forwards;\r\n  -webkit-animation: @-webkit-simplefadein 0.4s 1 ease-in-out forwards;\r\n}\r\n\r\nform {\r\n  width: 100%;\r\n  max-width: 500px;\r\n  margin: auto;\r\n}\r\n\r\n.invalid {\r\n  border: 1px solid red;\r\n}\r\n\r\n@keyframes simplefadein {\r\n  0% {-webkit-transform: scale(0);transform: scale(0)}\r\n  100% {-webkit-transform: scale(1);transform: scale(1)}\r\n}\r\n\r\n@-webkit-keyframes simplefadein {\r\n  0% {-webkit-transform: scale(0);transform: scale(0)}\r\n  100% {-webkit-transform: scale(1);transform: scale(1)}\r\n}\r\n"
 
 /***/ }),
 
@@ -274,7 +271,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n    <h1>New Slide</h1>\n    <form [formGroup]=\"insertedSlide\" (ngSubmit)=\"onSubmit(insertedSlide.value)\">\n      <div class=\"form-group\">\n        <label for=\"title\">Title:</label>\n        <input type=\"text\" class=\"form-control\" required  (change)=\"onTitleChange($event)\" name=\"title\">\n      </div>\n\n      <div class=\"form-group\">\n        <label for=\"description\">Description:</label>\n        <input type=\"text\" class=\"form-control\" required  (change)=\"onDescriptionChange($event)\" name=\"description\">\n      </div>\n\n      <div class=\"form-group\">\n        <label for=\"image\">Image:</label>\n        <input type=\"file\" class=\"form-control\" (change)=\"onFileChange($event)\" name=\"image\" />\n      </div>\n\n      <div class=\"form-group\">\n        <label for=\"embedded\">Url:</label>\n        <input type=\"text\" class=\"form-control\" (change)=\"onEmbeddedChange($event)\" name=\"embedded\">\n      </div>\n\n      <button type=\"submit\" class=\"btn btn-success\">Submit</button>\n\n    </form>\n</div>\n"
+module.exports = "<div class=\"container keyframe-animated\">\n    <h1>New Slide</h1>\n    <form [formGroup]=\"insertedSlide\" (ngSubmit)=\"onSubmit(insertedSlide.value)\">\n      <div class=\"form-group\">\n        <label for=\"title\">Title:</label>\n        <input type=\"text\" class=\"form-control\" required [class.invalid]=\"validState\"  (change)=\"onTitleChange($event)\" name=\"title\">\n      </div>\n\n      <div class=\"form-group\">\n        <label for=\"description\">Description:</label>\n        <input type=\"text\" class=\"form-control\" required [class.invalid]=\"validState\" (change)=\"onDescriptionChange($event)\" name=\"description\">\n      </div>\n\n      <div class=\"form-group\">\n        <label for=\"image\">Image:</label>\n        <input type=\"file\" class=\"form-control\" (change)=\"onFileChange($event)\" name=\"image\" />\n      </div>\n\n      <div class=\"form-group\">\n        <label for=\"embedded\">Url:</label>\n        <input type=\"text\" class=\"form-control\" (change)=\"onEmbeddedChange($event)\" name=\"embedded\">\n      </div>\n\n      <div class=\"form-group\" *ngIf=\"validState\">{{validState}}</div>\n\n      <button type=\"submit\" class=\"btn btn-success\">Submit</button>\n\n    </form>\n</div>\n"
 
 /***/ }),
 
@@ -289,8 +286,9 @@ module.exports = "<div class=\"container\">\n    <h1>New Slide</h1>\n    <form [
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NewSlideComponent", function() { return NewSlideComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _api_interaction_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api-interaction.service */ "./src/app/api-interaction.service.ts");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+/* harmony import */ var _api_interaction_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../api-interaction.service */ "./src/app/api-interaction.service.ts");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -303,18 +301,20 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var NewSlideComponent = /** @class */ (function () {
-    function NewSlideComponent(fb, cd, apiService) {
+    function NewSlideComponent(fb, cd, apiService, location) {
         this.fb = fb;
         this.cd = cd;
         this.apiService = apiService;
+        this.location = location;
     }
     NewSlideComponent.prototype.ngOnInit = function () {
-        this.insertedSlide = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormGroup"]({
-            title: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](),
-            description: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](),
-            image: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"]([null, _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]),
-            embedded: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"]()
+        this.insertedSlide = new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormGroup"]({
+            title: new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"](null, [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
+            description: new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]([_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
+            image: new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]([null, _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
+            embedded: new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]()
         });
     };
     NewSlideComponent.prototype.onTitleChange = function (event) {
@@ -347,8 +347,16 @@ var NewSlideComponent = /** @class */ (function () {
         if (!formValue.embedded) {
             formValue.embedded = 'empty';
         }
-        console.log(formValue);
-        this.apiService.addSlide(formValue).subscribe();
+        if (formValue.title && formValue.description) {
+            console.log(formValue);
+            this.apiService.addSlide(formValue).subscribe();
+            console.log("Form Submitted!");
+            location.replace('/');
+        }
+        else {
+            this.validState = 'Required title and description fields';
+            return;
+        }
     };
     NewSlideComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -356,7 +364,7 @@ var NewSlideComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./new-slide.component.html */ "./src/app/new-slide/new-slide.component.html"),
             styles: [__webpack_require__(/*! ./new-slide.component.css */ "./src/app/new-slide/new-slide.component.css")]
         }),
-        __metadata("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormBuilder"], _angular_core__WEBPACK_IMPORTED_MODULE_0__["ChangeDetectorRef"], _api_interaction_service__WEBPACK_IMPORTED_MODULE_1__["ApiInteractionService"]])
+        __metadata("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormBuilder"], _angular_core__WEBPACK_IMPORTED_MODULE_0__["ChangeDetectorRef"], _api_interaction_service__WEBPACK_IMPORTED_MODULE_2__["ApiInteractionService"], _angular_common__WEBPACK_IMPORTED_MODULE_1__["Location"]])
     ], NewSlideComponent);
     return NewSlideComponent;
 }());
@@ -392,7 +400,7 @@ var Slide = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = ".remove-slide {\r\n  display: block;\r\n  margin: auto;\r\n}\r\n"
 
 /***/ }),
 
@@ -403,7 +411,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div>\n  <img src=\"{{slide.image}}\" alt=\"image\" class=\"d-block w-100\">\n  <div class=\"carousel-caption d-none d-md-block\">\n    {{slide.title}}\n    <div>\n      <p>{{slide.description}}</p>\n      <span class=\"badge\">{{slide.id}}</span>\n      <span>Iframe: {{slide.embedded}}</span>\n      <button type=\"button\" name=\"remove-slide\" (click)=\"onRemove(slide)\">remove</button>\n    </div>\n  </div>\n</div>\n"
+module.exports = "<div>\n  <img src=\"{{slide.image}}\" alt=\"image\" class=\"d-block w-100\">\n  <div class=\"carousel-caption d-none d-md-block\">\n    {{slide.title}}\n    <div>\n      <p>{{slide.description}}</p>\n      <span>Iframe: {{slide.embedded}}</span>\n      <button type=\"button\" class=\"btn btn-danger remove-slide\" name=\"remove-slide\" (click)=\"onRemove(slide)\">remove</button>\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -419,7 +427,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SlideComponent", function() { return SlideComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _slide__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../slide */ "./src/app/slide.ts");
-/* harmony import */ var _api_interaction_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../api-interaction.service */ "./src/app/api-interaction.service.ts");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+/* harmony import */ var _api_interaction_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../api-interaction.service */ "./src/app/api-interaction.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -432,15 +441,18 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 //import * as $ from 'jquery';
 var SlideComponent = /** @class */ (function () {
-    function SlideComponent(apiService) {
+    function SlideComponent(apiService, location) {
         this.apiService = apiService;
+        this.location = location;
     }
     SlideComponent.prototype.ngOnInit = function () {
     };
     SlideComponent.prototype.onRemove = function (slide) {
         this.apiService.removeSlide(slide).subscribe();
+        location.reload();
     };
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
@@ -452,7 +464,7 @@ var SlideComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./slide.component.html */ "./src/app/slide/slide.component.html"),
             styles: [__webpack_require__(/*! ./slide.component.css */ "./src/app/slide/slide.component.css")]
         }),
-        __metadata("design:paramtypes", [_api_interaction_service__WEBPACK_IMPORTED_MODULE_2__["ApiInteractionService"]])
+        __metadata("design:paramtypes", [_api_interaction_service__WEBPACK_IMPORTED_MODULE_3__["ApiInteractionService"], _angular_common__WEBPACK_IMPORTED_MODULE_2__["Location"]])
     ], SlideComponent);
     return SlideComponent;
 }());
@@ -468,7 +480,7 @@ var SlideComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\r\n"
+module.exports = ".add-new-slide {\n  margin: 30px auto;\n}\n"
 
 /***/ }),
 
@@ -479,7 +491,7 @@ module.exports = "\r\n"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<h2>Slides</h2>\n<div id=\"carouselExampleControls\" class=\"carousel slide\" data-ride=\"carousel\">\n  <ol class=\"carousel-indicators\">\n    <li *ngFor=\"let slide of slides; let index = index\" data-target=\"#carouselExampleIndicators\" data-slide-to=\"index\" [class.active]=\"index == 0\"></li>\n  </ol>\n  <div  class=\"carousel-inner\">\n      <app-slide  *ngFor=\"let slide of slides; let index = index\" [slide]=\"slide\" class=\"carousel-item\" [class.active]=\"index == 0\"></app-slide>\n      <!--<app-slide  *ngFor=\"let slide of slides\" [slide]=\"{ $implicit: slide }\"></app-slide>-->\n      <a class=\"carousel-control-prev\" href=\"#carouselExampleControls\" role=\"button\" data-slide=\"prev\">\n        <span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"></span>\n        <span class=\"sr-only\">Previous</span>\n      </a>\n      <a class=\"carousel-control-next\" href=\"#carouselExampleControls\" role=\"button\" data-slide=\"next\">\n        <span class=\"carousel-control-next-icon\" aria-hidden=\"true\"></span>\n        <span class=\"sr-only\">Next</span>\n      </a>\n  </div>\n</div>\n\n<a routerLink=\"/new-slide\">Add New</a>\n"
+module.exports = "\n  <h2>Slides</h2>\n  <p *ngIf=\"message\">{{message}}</p>\n  <div id=\"carouselExampleControls\" class=\"carousel slide\" data-ride=\"carousel\">\n    <ol class=\"carousel-indicators\">\n      <li *ngFor=\"let slide of slides; let index = index\" data-target=\"#carouselExampleIndicators\" data-slide-to=\"index\" [class.active]=\"index == 0\"></li>\n    </ol>\n    <div  class=\"carousel-inner\">\n        <app-slide  *ngFor=\"let slide of slides; let index = index\" [slide]=\"slide\" class=\"carousel-item\" [class.active]=\"index == 0\"></app-slide>\n        <!--<app-slide  *ngFor=\"let slide of slides\" [slide]=\"{ $implicit: slide }\"></app-slide>-->\n        <a class=\"carousel-control-prev\" href=\"#carouselExampleControls\" role=\"button\" data-slide=\"prev\">\n          <span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"></span>\n          <span class=\"sr-only\">Previous</span>\n        </a>\n        <a class=\"carousel-control-next\" href=\"#carouselExampleControls\" role=\"button\" data-slide=\"next\">\n          <span class=\"carousel-control-next-icon\" aria-hidden=\"true\"></span>\n          <span class=\"sr-only\">Next</span>\n        </a>\n    </div>\n  </div>\n\n  <a class=\"btn btn-primary add-new-slide\" routerLink=\"/new-slide\">Add New</a>\n"
 
 /***/ }),
 
@@ -517,7 +529,13 @@ var SliderComponent = /** @class */ (function () {
     SliderComponent.prototype.loadSlides = function () {
         var _this = this;
         this.apiService.getSlides()
-            .subscribe(function (slides) { return _this.slides = slides; });
+            .subscribe(function (slides) {
+            _this.slides = slides;
+            setTimeout(function () {
+                _this.message = _this.slides.length ? '' : 'There is no slides...';
+                console.log(_this.slides);
+            }, 500);
+        });
     };
     SliderComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({

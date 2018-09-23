@@ -3,7 +3,8 @@ var uuidv4 = require('uuid/v4');
 var db = require('../models/db');
 var Pool = db.Pool;
 
-module.exports.getSlides = function (req, res) {
+module.exports.getSlides = function (req, res, next) {
+    console.log(next);
     const pool = new Pool({
       user: process.env.DBUSER,
       host: process.env.DBHOST,
@@ -13,9 +14,12 @@ module.exports.getSlides = function (req, res) {
     });
     pool.query('SELECT * from items', (err, client) => {
       if (err) {
-        console.log(err);
+        next(err);
+        res.status(500)
+        //res.send(err);
+        res.send({error: 'Some error on server'})
       } else {
-        console.log(client.rows);
+        //console.log(client.rows);
         res.status(200)
         res.json(client.rows);
       }
@@ -59,7 +63,9 @@ module.exports.addSlide = function (req, res) {
   });
   pool.query(userInput, (err, client) => {
     if (err) {
-      console.log(err);
+      next(err);
+      res.status(500)
+      res.send({error: 'Some error on server'})
     } else {
       res.status(200)
       res.json({
@@ -85,7 +91,9 @@ module.exports.removeSlide = function (req, res) {
   }
   pool.query(removedSlide, (err, client) => {
     if (err) {
-      console.log(err);
+      next(err);
+      res.status(500)
+      res.send({error: 'Some error on server'})
     } else {
       res.status(200)
       res.json({
