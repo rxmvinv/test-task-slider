@@ -57,7 +57,7 @@ var httpOptions = {
 var ApiInteractionService = /** @class */ (function () {
     function ApiInteractionService(http) {
         this.http = http;
-        this.apiUrl = 'http://localhost:3000/api/slides';
+        this.apiUrl = 'api/slides';
     }
     ApiInteractionService.prototype.getSlides = function () {
         return this.http.get(this.apiUrl, httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])(function (data) { return console.log(data); }, function (error) { return console.log(error); }));
